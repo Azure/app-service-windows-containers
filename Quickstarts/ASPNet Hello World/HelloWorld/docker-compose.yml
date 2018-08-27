@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   helloworld:
-    image: ${DOCKER_REGISTRY}helloworld
+    image: ${DOCKER_REGISTRY}ASPNetHelloWorld
     build:
       context: .
       dockerfile: Dockerfile
