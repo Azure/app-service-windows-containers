@@ -1,0 +1,30 @@
+#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
+#For more information, please see http://aka.ms/containercompat 
+
+
+# ASP.Net 4.7.2 on Windows Server Core LTSC 2016 base image specified as Windows Server 2016 LTSC is required to run on Azure App Service
+FROM microsoft/aspnet:4.7.2-windowsservercore-ltsc2016
+ARG source
+
+# Restore the default Windows shell for correct batch processing below.
+SHELL ["cmd", "/S", "/C"]
+
+
+# PowerShell Action which does the following:
+# 1. Create ExternalDependencies folder in C:\TEMP
+# 2. Download installation PowerShell script and fonts from storage account
+# 3. Execute downloaded font installation script with provided arguments 
+# 4. Remove ExternalDependencies folder created in 1. to remove uneccessary layers from total size of output image.
+#
+RUN powershell.exe -Command \
+  $ErrorActionPreference = 'Stop'; \
+  mkdir c:\TEMP\ExternalDependencies ; \
+  Invoke-WebRequest https://<storageaccount>.blob.core.windows.net/windowscontainerdemos/CustomFonts/ExternalDependencies/InstallFont.ps1 -OutFile C:\TEMP\ExternalDependencies\InstallFont.ps1 ; \
+  Invoke-WebRequest https://<storageaccount>.blob.core.windows.net/windowscontainerdemos/CustomFonts/ExternalDependencies/<fontname>.ttf -OutFile C:\TEMP\ExternalDependencies\<fontname>.ttf ; \
+  Invoke-WebRequest https://<storageaccount>.blob.core.windows.net/windowscontainerdemos/CustomFonts/ExternalDependencies/<fontname>.ttf -OutFile C:\TEMP\ExternalDependencies\<fontname>.ttf ; \
+  Invoke-WebRequest https://<storageaccount>.blob.core.windows.net/windowscontainerdemos/CustomFonts/ExternalDependencies/<fontname>.TTF -OutFile C:\Temp\ExternalDependencies\<fontname>.TTF ; \
+  Start-Process c:\TEMP\ExternalDependencies\InstallFont.ps1 ; \
+  Remove-Item c:\TEMP\ExternalDependencies -Recurse -Force ;
+
+WORKDIR /inetpub/wwwroot
+COPY ${source:-obj/Docker/publish} .
