@@ -1,0 +1,32 @@
+#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
+#For more information, please see http://aka.ms/containercompat 
+
+
+# ASP.Net 4.7.2 on Windows Server Core LTSC 2016 base image specified as Windows Server 2016 LTSC is required to run on Azure App Service
+FROM microsoft/aspnet:4.7.2-windowsservercore-ltsc2016
+ARG source
+
+SHELL ["cmd", "/S", "/C"]
+
+
+# PowerShell Action which does the following:
+# 1. Create ExternalDependencies folder in C:\TEMP
+# 2. Specify Outfile and Arguments local variables
+# 3. Download Jet installer from storage account
+# 4. Execute downloaded installer with provided arguments - such as /Q for installing headless/quiet
+# 5. Remove ExternalDependencies folder created in 1. to remove uneccessary layers from total size of output image.
+#
+RUN powershell.exe -Command \
+  $ErrorActionPreference = 'Stop'; \
+  md c:\TEMP\ExternalDependencies ; \
+  $OutFile = 'C:\TEMP\ExternalDependencies\Jet40SP8_9xNT.exe' ; \
+  $arguments = '/Q' ; \
+  Invoke-WebRequest "https://<storageaccount>.blob.core.windows.net/windowscontainerdemos/AccessDB/Jet40SP8_9xNT.exe" -UseBasicParsing -OutFile $OutFile ; \
+  Start-Process $OutFile $arguments -wait ; \
+  Remove-Item c:\TEMP\ExternalDependencies -Recurse -Force ;
+
+WORKDIR /inetpub/wwwroot
+COPY ${source:-obj/Docker/publish} .
+
+# Configure the IIS Application Pool for 32-bit applications
+RUN C:\Windows\System32\inetsrv\appcmd set apppool DefaultAppPool /enable32bitapponwin64:true
