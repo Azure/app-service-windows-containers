@@ -38,21 +38,21 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/">Application name</a>
+                    <a class="navbar-brand" runat="server" href="~/">Windows Containers on Azure App Service Quickstart</a>
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/">Home</a></li>
-                        <li><a runat="server" href="~/About">About</a></li>
-                        <li><a runat="server" href="~/Contact">Contact</a></li>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li><a runat="server" href="~/" class="nav-link">Home</a></li>
+                        <li><a runat="server" href="~/About" class="nav-link">About</a></li>
+                        <li><a runat="server" href="~/Contact" class="nav-link">Contact</a></li>
                     </ul>
                 </div>
             </div>
