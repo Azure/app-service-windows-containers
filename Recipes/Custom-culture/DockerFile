@@ -2,8 +2,8 @@
 #For more information, please see http://aka.ms/containercompat 
 
 
-# ASP.Net 4.7.2 on Windows Server Core LTSC 2016 base image specified as Windows Server 2016 LTSC is required to run on Azure App Service
-FROM microsoft/aspnet:4.7.2-windowsservercore-ltsc2016
+# ASP.Net 4.8 on Windows Server Core LTSC 2019 base image specified
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019
 ARG source
 
 # Restore the default Windows shell for correct batch processing below.
